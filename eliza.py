@@ -52,6 +52,28 @@ responses = {
     r'.* ?(hi|Hi|hello|Hello) ?(?P<keywords>.*)?': ["Hey there, how are you?",
                                                     "Hi. It is a pleasure to meet you. What would you like to talk about today?"],
 
+    # Answer Yes/No Questions
+    r'Yes|yes?(?P<keywords>.*)':
+    ["Tell me more about it.","How often do you find yourself feeling this way?","Why are you sure about this?"],
+
+    r'No|no?(?P<keywords>.*)':
+    ["Why don't you believe it?", "What makes you say no?"],
+
+    r'.*Because|because (?P<keywords>.+)':
+    ["What makes you state that reason?","What other reasons influence you?","I don't think that is the only reason, can you tell me more about it?"],
+    
+    #Generic responses
+    r'(why|when|how|what) .*': 
+    ["Why did you ask me that?",
+     "Does this topic bother you?",
+     "Would you like to talk about this more?"],
+    
+    # These responses are for when the user is talking about how they feel
+    r'I am|feel|I think (?P<keywords>.+)':
+    ["Is feeling text why you wanted to talk today?",
+     "How long have you been feeling text?",
+     "How does feeling text make you feel?"],
+
     # These responses are for when the user is not sure about something
     r'.* ?(Inconsistent|Confuse|Unclear|Undecide|Perhaps|Maybe|I am not sure|I do not know).*':
       ["Are you certain?",
@@ -66,11 +88,6 @@ responses = {
        "How would you feel if you get text?",
        "Why do you want text?"],
 
-    # These responses are for when the user is talking about how they feel
-    r'I am|feel|I think (?P<keywords>.+)':
-    ["Is feeling text why you wanted to talk today?",
-     "How long have you been feeling text?",
-     "How does feeling text make you feel?"],
 
     # These responses are meant for regurgitating inputs into questions
     r'.* ?am I (?P<keywords>.+)': 
@@ -90,21 +107,7 @@ responses = {
        ["What made you text ?",
         "Are you willing to tell me more about your text now?"],
 
-    # Answer Yes/No Questions
-    r'Yes|yes?(?P<keywords>.*)':
-    ["Tell me more about it.","How often do you find yourself feeling this way?","Why are you sure about this?"],
-
-    r'No|no?(?P<keywords>.*)':
-    ["Why don't you believe it?", "What makes you say no?"],
-
-    r'.*Because (?P<keywords>.+)':
-    ["What makes you state that reason?","What other reasons influence you?","I don't think that is the only reason, can you tell me more about it?"],
     
-    #Generic responses
-    r'(why|when|how|what) .*': 
-    ["Why did you ask me that?",
-     "Does this topic bother you?",
-     "Would you like to talk about this more?"],
 }
 
 # --------- Define Functions
