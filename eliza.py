@@ -48,7 +48,63 @@ confused_responses = ["Why don't you elaborate on that to help me understand?",
 #TODO: List of responses needed in order for the code to function
 # Pre-made dictionary of responses
 responses = {
-    'some input phrase' : 'the response'
+    # These are responses are general responses to introductions/greetings
+    r'.* ?(hi|Hi|hello|Hello) ?(?P<keywords>.*)?': ["Hey there, how are you?",
+                                                    "Hi. It is a pleasure to meet you. What would you like to talk about today?"],
+
+    # These responses are for when the user is not sure about something
+    r'.* ?(Inconsistent|Confuse|Unclear|Undecide|Perhaps|Maybe|I am not sure|I do not know).*':
+      ["Are you certain?",
+       "Do you have any ideas for how you will address this uncertainity?",
+       "Why do you think you are so unsure about this?"],
+
+    # These responses are for responding to when the user is talking about something they want
+    r'I want (?P<keywords>.+)':
+      ["Why do you want text",
+        "What makes you think you need text?",
+       "What will you do if you get text?",
+       "How would you feel if you get text?",
+       "Why do you want text?"],
+
+    # These responses are for when the user is talking about how they feel
+    r'I am|feel|I think (?P<keywords>.+)':
+    ["Is feeling text why you wanted to talk today?",
+     "How long have you been feeling text?",
+     "How does feeling text make you feel?"],
+
+    # These responses are meant for regurgitating inputs into questions
+    r'.* ?am I (?P<keywords>.+)': 
+    ["Do you think that you are text?",
+     "Why do you feel text",
+     "Are you hoping that I can help you understand why you are feeling text"],
+
+    r'.* ?would like (?P<keywords>.+)':
+    ["Why would you like text ?", "Why is text important to you?"],
+
+     # Asking for elaboration
+     r'Were you (?P<keywords>.*)':
+       [ "Do you think that I was text ?",
+        "If I had been text how would that make you feel?"],
+
+     r'I was |I have (?P<keywords>.*)':
+       ["What made you text ?",
+        "Are you willing to tell me more about your text now?"],
+
+    # Answer Yes/No Questions
+    r'Yes|yes?(?P<keywords>.*)':
+    ["Tell me more about it.","How often do you find yourself feeling this way?","Why are you sure about this?"],
+
+    r'No|no?(?P<keywords>.*)':
+    ["Why don't you believe it?", "What makes you say no?"],
+
+    r'.*Because (?P<keywords>.+)':
+    ["What makes you state that reason?","What other reasons influence you?","I don't think that is the only reason, can you tell me more about it?"],
+    
+    #Generic responses
+    r'(why|when|how|what) .*': 
+    ["Why did you ask me that?",
+     "Does this topic bother you?",
+     "Would you like to talk about this more?"],
 }
 
 # --------- Define Functions
@@ -94,7 +150,7 @@ def get_names(no_stop_words_text, userinput):
 
     
     for word in no_stop_words_text:
-        print(f"word is {word}")
+        
         if word[1] !='NNP' and word[0]==str(namesearch.group()).strip():
             name_text.append((word[0],'NNP'))
         else:
@@ -102,10 +158,7 @@ def get_names(no_stop_words_text, userinput):
 
     
 
-    name = [word[0] for word in name_text if word[1] in ['NNS','NNP','NN'] and re.match(r'[A-Z][a-z]*',word[0])]
-    
-    print(f"name is {name}")
-
+    name = [word[0] for word in name_text if word[1] in ['NNS','NNP','NN'] and re.match(r'[A-Z][a-z]*',word[0]) and word[0].lower() not in ('hi','hello','hey')]
 
     return name, name_text
 
@@ -124,17 +177,29 @@ def remove_nonsense(userinput):
 # Generate a Response
 def get_response(userinput,postype):
 
-    
+    response = ''
+    for key,value in responses.items():
+        answer = re.search(r'{}'.format(key),userinput)
 
+    ##Select a response for that key
+        if answer is not None:
+            response = re.sub('text?', postype,random.choice(value))
+
+    # Check that a response was given
+    if response =='':
+        response = eliza_confused(True)
+            
     return response
 
 #TODO: This is where the actual logic flow will go
 # Pre-processing & Response Generation
 def preprocess(userinput):
 
+    response = ''
+
     confused = False # using True for now to test
 
-    response = "Tell me about something else?"
+    #response = "Tell me about something else?"
     
     this_chunk, nounphrases = [], []
 
@@ -167,10 +232,10 @@ def preprocess(userinput):
     
 
     # Perform Word Spotting
-    name, adjective, verb,adverb, noun = '','','','',''
+    name, adjective, verb, adverb, noun = '','','','',''
 
     if re.search(r'.[A-Z][a-z]*',userinput):
-        print('name found')        
+              
         # This will handle the case where end users enter a name 
         # TODO: Bug - "My name is Probably Devin" returns name as "Probably"
         name, non_name_text = get_names(cleaned_words, userinput)
@@ -185,7 +250,7 @@ def preprocess(userinput):
         adjective = [word[0] for word in non_name_text if word[1] in ['JJ','JJR','JJS']]
 
     else:
-        print('name not found')
+        
         # This will handle nouns
         noun = [word[0] for word in cleaned_words if word[1] in ['NNS','NN']]
 
@@ -201,15 +266,19 @@ def preprocess(userinput):
     
     if name:
         
-        response=[f"Hello {name[0]}! It's great to see you. How are you?"]
+        response=f"Hello {name[0]}! It's great to see you. How are you?"
     
     if adjective:
-        response = get_response(userinput,adjective[0])
+        response = get_response(userinput, adjective[0])
+    
+    if noun:
+        response = get_response(userinput, noun[0])
 
-    else:
-        response = eliza_confused(confused=True)
+    if verb:
+       response = get_response(userinput, verb[0])
 
-
+    if adverb:
+       response = get_response(userinput, adverb[0])
 
     return response
 
