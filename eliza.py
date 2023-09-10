@@ -53,11 +53,12 @@ responses = {
                                                     "Hi. It is a pleasure to meet you. What would you like to talk about today?"],
 
     # Answer Yes/No Questions
-    r'Yes|yes?(?P<keywords>.*)':
+    r'Yes|yes':
     ["Tell me more about it.","How often do you find yourself feeling this way?","Why are you sure about this?"],
 
-    r'No|no?(?P<keywords>.*)':
+    r'.* ?(No|no)':
     ["Why don't you believe it?", "What makes you say no?"],
+    r'.*? (I am not| I do not) (?P<keywords>.+)':['Why do you not think so?','Why do you not text?'],
 
     r'.*Because|because (?P<keywords>.+)':
     ["What makes you state that reason?","What other reasons influence you?","I don't think that is the only reason, can you tell me more about it?"],
@@ -76,8 +77,7 @@ responses = {
 
     # These responses are for when the user is not sure about something
     r'.* ?(Inconsistent|Confuse|Unclear|Undecide|Perhaps|Maybe|I am not sure|I do not know).*':
-      ["Are you certain?",
-       "Do you have any ideas for how you will address this uncertainity?",
+      ["Do you have any ideas for how you will address this uncertainity?",
        "Why do you think you are so unsure about this?"],
 
     # These responses are for responding to when the user is talking about something they want
@@ -87,7 +87,6 @@ responses = {
        "What will you do if you get text?",
        "How would you feel if you get text?",
        "Why do you want text?"],
-
 
     # These responses are meant for regurgitating inputs into questions
     r'.* ?am I (?P<keywords>.+)': 
@@ -189,7 +188,7 @@ def get_response(userinput,postype):
             response = re.sub('text?', postype,random.choice(value))
 
     # Check that a response was given
-    if response =='':
+    if response == '':
         response = eliza_confused(True)
             
     return response
@@ -230,8 +229,10 @@ def preprocess(userinput):
             nounphrases.append(this_chunk)
 
     # remove stop words
+    print(pos_user_words)
     
-    cleaned_words = [word for word in pos_user_words if word[0].lower() not in stop_words]
+    cleaned_words = [word for word in pos_user_words if (word[0].lower() not in stop_words) or ( word[0].lower() in ('no'))]
+    print(cleaned_words)
     
 
     # Perform Word Spotting
@@ -252,6 +253,9 @@ def preprocess(userinput):
         # This will handle adjectives
         adjective = [word[0] for word in non_name_text if word[1] in ['JJ','JJR','JJS']]
 
+        #yes/no
+        determiner = [word[0] for word in non_name_text if word[1] in ['DT']]
+
     else:
         
         # This will handle nouns
@@ -265,6 +269,9 @@ def preprocess(userinput):
 
         # This will handle adjectives
         adjective = [word[0] for word in cleaned_words if word[1] in ['JJ','JJR','JJS']]
+
+        #yes/no
+        determiner = [word[0] for word in cleaned_words if word[1] in ['DT']]
 
     
     if name:
@@ -282,6 +289,10 @@ def preprocess(userinput):
 
     if adverb:
        response = get_response(userinput, adverb[0])
+
+    if determiner:
+       response = get_response(userinput, determiner[0])
+    
 
     return response
 
