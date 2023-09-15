@@ -1,7 +1,7 @@
 # Assignment: Eliza Chatbot
 # Course: AIT 526
 # Names: Devin Schechter, Stuti Tandon, Jeffrey Stejskal, Syeda Abhia Abbas
-# Date: 8/29/2023
+# Date: 09/15/2023
 
 # Purpose Statement:
 # This is an example of an Eliza chatbot, which was originally created to mimic a phsycologist.
