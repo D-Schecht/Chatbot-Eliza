@@ -67,26 +67,26 @@ responses = {
     ["Tell me more about it.","How often do you find yourself feeling this way?","Why are you sure about this?"],
 
     r'.* ?(No|no)':
-    ["Why don't you believe it?", "What makes you say no?"],
-    r'.*? (I am not| I do not) (?P<keywords>.+)':['Why do you not think so?','Why do you not text?'],
+    ["Why don't you?", "What makes you say no?"],
+    r'.*? I am not| I do not (?P<keywords>.+)':['Why do you not think so?','Why do you not text?'],
 
     r'.*Because|because (?P<keywords>.+)':
     ["What makes you state that reason?","What other reasons influence you?","I don't think that is the only reason, can you tell me more about it?"],
     
     #Generic responses
-    r'(why|when|how|what) .*': 
+    r'why|when|how|what': 
     ["Why did you ask me that?",
      "Does this topic bother you?",
      "Would you like to talk about this more?"],
     
     # These responses are for when the user is talking about how they feel
-    r'I am|feel|I think (?P<keywords>.+)':
+    r'I am|feel|think (?P<keywords>.+)':
     ["Is feeling text why you wanted to talk today?",
-     "How long have you been feeling text?",
+     "How long have you been feeling this text?",
      "How does feeling text make you feel?"],
 
     # These responses are for when the user is not sure about something
-    r'.* ?(Inconsistent|Confuse|Unclear|Undecide|Perhaps|Maybe|I am not sure|I do not know).*':
+    r'.* ?(idk|I do not know|confused|confuse|unclear|undecided|maybe|I am not sure).*':
       ["Do you have any ideas for how you will address this uncertainity?",
        "Why do you think you are so unsure about this?"],
 
@@ -108,7 +108,7 @@ responses = {
     ["Why would you like text ?", "Why is text important to you?"],
 
      # Asking for elaboration
-     r'Were you (?P<keywords>.*)':
+     r'Were|were you (?P<keywords>.*)':
        [ "Do you think that I was text ?",
         "If I had been text how would that make you feel?"],
 
