@@ -173,18 +173,6 @@ def get_names(no_stop_words_text, userinput):
 
     return name, name_text
 
-# remove nonsense words
-def remove_nonsense(userinput):
-    nonsense = []
-    nonsense = [word for word in userinput]
-
-    sensical_words = []
-    for item in nonsense:
-        if item[0].lower() in words.words():
-            sensical_words.append(item)
-    
-    return sensical_words
-
 # Generate a Response
 def get_response(userinput,postype):
 
