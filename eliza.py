@@ -4,10 +4,20 @@
 # Date: 8/29/2023
 
 # Purpose Statement:
+# This is an example of an Eliza chatbot, which was originally created to mimic a phsycologist.
+# This assignment works to create a basic version of this chatbot that is able to ask questions about how a user is feeling.
 
 # Usage Example:
+# Eliza: Hello - I'm Eliza! Can you tell me your name?
+#You: Hi I'm Devin
+# Eliza: Hello Devin! It's great to see you. How are you?
+# You: I am sad
 
 # Usage Instructions:
+# 1) Execute the code below in the command line
+# 2) Eliza will introduce herself and ask for your name. Enter your name.
+# 3) Eliza will ask how you are - and will continue to ask you questions.
+# 4) When you are done with the conversation type 'goodbye'
 
 
 # ------------------- CODE STARTS HERE ----------------------------- #
@@ -116,7 +126,6 @@ responses = {
 def eliza_confused(confused):
     if confused:
         #If Eliza is confused - randomly select one of the premade confused responses
-        #print(len(confused_responses))
         action = confused_responses[random.randint(0,len(confused_responses)-1)]
         return action
 
@@ -229,10 +238,8 @@ def preprocess(userinput):
             nounphrases.append(this_chunk)
 
     # remove stop words
-    print(pos_user_words)
     
     cleaned_words = [word for word in pos_user_words if (word[0].lower() not in stop_words) or ( word[0].lower() in ('no'))]
-    print(cleaned_words)
     
 
     # Perform Word Spotting
