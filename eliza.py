@@ -30,7 +30,6 @@ import nltk
 from nltk.tokenize import word_tokenize, RegexpTokenizer
 from nltk.corpus import stopwords
 from nltk import pos_tag, ne_chunk
-from nltk.probability import FreqDist
 from nltk.corpus import words 
 from nltk.tree import Tree
 import random 
@@ -70,8 +69,9 @@ responses = {
     ["Why don't you?", "What makes you say no?"],
     r'.*? I am not| I do not (?P<keywords>.+)':['Why do you not think so?','Why do you not text?'],
 
+    # These responses will look for explanations / reasons from the user
     r'.*Because|because (?P<keywords>.+)':
-    ["What makes you state that reason?","What other reasons influence you?","I don't think that is the only reason, can you tell me more about it?"],
+    ["Why do you think that is a good reason?","Are there any other reasons that you might think that?","I don't think that is the only reason, can you tell me more about it?","Do you think text is a good reason?"],
     
     #Generic responses
     r'why|when|how|what': 
@@ -92,7 +92,7 @@ responses = {
 
     # These responses are for responding to when the user is talking about something they want
     r'I want (?P<keywords>.+)':
-      ["Why do you want text",
+      ["Why do you want what text?",
         "What makes you think you need text?",
        "What will you do if you get text?",
        "How would you feel if you get text?",
